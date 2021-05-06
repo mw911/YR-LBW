@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.IO.Compression
 Imports System.Runtime.Serialization.Formatters.Binary
+Imports System.Threading
 
 
 Public Class Verteilung
@@ -369,7 +370,13 @@ lb_retry:
 
     Private Sub DataGridView1_CellParsing(sender As Object, e As DataGridViewCellParsingEventArgs) Handles DataGridView1.CellParsing
         Try
-            e.Value = CType(e.Value.ToString.Replace(",", "."), Double)
+            Dim ds As Char = Convert.ToChar(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+            Select Case ds
+                Case "."c
+                    e.Value = CType(e.Value.ToString.Replace(",", "."), Double)
+                Case ","c
+                    e.Value = CType(e.Value.ToString.Replace(".", ","), Double)
+            End Select
             e.ParsingApplied = True
         Catch ex As Exception
         End Try
